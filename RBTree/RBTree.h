@@ -15,7 +15,7 @@ struct rbtree
 };
 typedef struct rbtree RBTree;
 
-//// FUNÇÕES
+//// FUNÃ‡Ã•ES
 
 void init(RBTree**Tree);
 RBTree *criaNo(RBTree *Pai, char cor, int info);
@@ -27,7 +27,7 @@ void rotacao_direita(RBTree**Tree);
 void nivel(RBTree *Raiz, int *nv);
 void exibe(RBTree *Tree, int x, int y, int dist);
 
-//// IMPLEMENTAÇÃO DAS FUNÇÕES
+//// IMPLEMENTAÃ‡ÃƒO DAS FUNÃ‡Ã•ES
 
 void init(RBTree**Tree)
 {
@@ -60,25 +60,19 @@ int altura(RBTree *Tree)
 
 void colore(RBTree**Tree)
 {
-    if((*Tree)->Pai == NULL)    //// RAIZ É SEMPRE PRETA
+    if((*Tree)->Pai == NULL)    //// RAIZ Ã‰ SEMPRE PRETA
         (*Tree)->Cor = 'b';
     else
     {
-        if((*Tree)->Pai->Cor == 'r')
+        if((*Tree)->Pai->Cor == 'r')    //// PAI Ã‰ VERMELHO
             (*Tree)->Cor = 'b';
-        else
+        else    //// PAI Ã‰ PRETO
         {
             if((*Tree)->Pai->Direita != NULL)
-            {
-                if((*Tree)->Pai->Direita->Cor == 'b')
-                    (*Tree)->Cor = 'r';
-                else
-                    (*Tree)->Cor = 'b';
-            }
-            else
-            {
-                //if(())
-            }
+                (*Tree)->Pai->Direita->Cor = 'b';
+
+            if((*Tree)->Pai->Esquerda != NULL)
+                (*Tree)->Pai->Esquerda->Cor = 'r';
         }
     }
 }
@@ -90,6 +84,7 @@ void insere(RBTree**Tree, RBTree *Pai, int info, char *rotacionou)
     if(*Tree == NULL)   //// ELEMENTO A SER INSERIDO SERA RAIZ
     {
         *Tree = criaNo(*Tree, 'b', info);
+        (*Tree)->Pai = Pai;
         *rotacionou = 0;
     }
     else if(info > (*Tree)->Info)

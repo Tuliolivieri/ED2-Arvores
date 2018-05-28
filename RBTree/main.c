@@ -2,31 +2,45 @@
 
 int main()
 {
-    int nv;
+    int nv, y, elem;
     RBTree *Tree;
     init(&Tree);
-    char rot;
+    char rot, op = 0;
 
     system("color 70");
 
-    insere(&Tree, Tree, 5, &rot);
-    insere(&Tree, Tree, 7, &rot);
-    insere(&Tree, Tree, 3, &rot);
-    insere(&Tree, Tree, 1, &rot);
-    insere(&Tree, Tree, 10, &rot);
-    insere(&Tree, Tree, 2, &rot);
-    insere(&Tree, Tree, 14, &rot);
-    insere(&Tree, Tree, 8, &rot);
-    insere(&Tree, Tree, 6, &rot);
+    while(op != 27)
+    {
+        clrscr();
+        gotoxy(10, 2); printf("Menu");
+        gotoxy(5, 5); printf("[I] - Inserir");
+        gotoxy(5, 7); printf("[E] - Exibir");
+        gotoxy(5, 9); printf("[ESC] - Sair");
+        op = toupper(getch());
 
-    exibe(Tree, 35, 2, 17);
-    getchar(); printf("\n\n\n");
-    insere(&Tree, Tree, 13, &rot);
-    insere(&Tree, Tree, 11, &rot);
-    insere(&Tree, Tree, 12, &rot);
-    exibe(Tree, 35, 10, 17);
-    //nivel(Tree, &nv);
-    //printf("\n\nNivel:\t%d", nv);
-    printf("\n\n\n");
+        switch(op)
+        {
+            case 'I':
+                clrscr();
+                y = 5;
+                gotoxy(10, 2); printf("Inserir na Arvore");
+                gotoxy(5, y); printf("Elemento a ser inserido <-1 para sair>:\t");
+                scanf("%d", &elem);
+                while(elem != -1)
+                {
+                    insere(&Tree, Tree, elem);
+                    y += 2;
+                    gotoxy(5, y); printf("Elemento a ser inserido <-1 para sair>:\t");
+                    scanf("%d", &elem);
+                }
+                break;
+            case 'E':
+                clrscr();
+                exibe(Tree, 35, 2, 17);
+                getch();
+                break;
+        }
+    }
+
     return 0;
 }

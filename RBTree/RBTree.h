@@ -2,7 +2,8 @@
 #define RBTREE_H_INCLUDED
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <conio.h>
+#include <string.h>
 #include "meuconio.h"
 
 struct rbtree
@@ -21,7 +22,7 @@ void init(RBTree**Tree);
 RBTree *criaNo(RBTree *Pai, char cor, int info);
 int altura(RBTree *Tree);
 void colore(RBTree**Tree);
-void insere(RBTree**Tree, RBTree *Pai, int info, char *rotacionou);
+void insere(RBTree**Tree, RBTree *Pai, int info);
 void rotacao_esquerda(RBTree**Tree);
 void rotacao_direita(RBTree**Tree);
 void nivel(RBTree *Raiz, int *nv);
@@ -58,21 +59,69 @@ int altura(RBTree *Tree)
     return b+1;
 }
 
-void colore(RBTree**Tree)
+/*void colore(RBTree**Tree)
 {
-    if((*Tree)->Pai == NULL)    //// RAIZ É SEMPRE PRETA
-        (*Tree)->Cor = 'b';
-    else
-    {
-        if((*Tree)->Pai->Cor == 'r')    //// PAI É VERMELHO
-            (*Tree)->Cor = 'b';
-        else    //// PAI É PRETO
-        {
-            if((*Tree)->Pai->Direita != NULL)
-                (*Tree)->Pai->Direita->Cor = 'b';
+    RBTree *Pai;
+    Pai = (*Tree)->Pai;
 
-            if((*Tree)->Pai->Esquerda != NULL)
-                (*Tree)->Pai->Esquerda->Cor = 'r';
+    if(Pai == NULL)    //// RAIZ É SEMPRE PRETA
+        (*Tree)->Cor = 'b';
+    if((*Tree)->Esquerda != NULL)
+    {
+        if((*Tree)->Esquerda->Esquerda != NULL)
+        {
+            if((*Tree)->Esquerda->Cor == 'r' && (*Tree)->Esquerda->Esquerda->Cor == 'r')
+            {
+                if((*Tree)->Direita != NULL && (*Tree)->Direita->Cor == 'r')
+                {
+                    (*Tree)->Direita->Cor = 'b';
+                    (*Tree)->Esquerda->Cor = 'b';
+                    if(Pai != NULL)
+                       (*Tree)->Cor = 'r';
+                }
+            }
+        }
+        if((*Tree)->Esquerda->Direita != NULL)
+        {
+            if((*Tree)->Esquerda->Cor == 'r' && (*Tree)->Esquerda->Direita->Cor == 'r')
+            {
+                if((*Tree)->Direita != NULL && (*Tree)->Direita->Cor == 'r')
+                {
+                    (*Tree)->Direita->Cor = 'b';
+                    (*Tree)->Esquerda->Cor = 'b';
+                    if(Pai != NULL)
+                        (*Tree)->Cor = 'r';
+                }
+            }
+        }
+    }
+    if((*Tree)->Direita != NULL)
+    {
+        if((*Tree)->Direita->Direita != NULL)
+        {
+            if((*Tree)->Direita->Cor == 'r' && (*Tree)->Direita->Direita->Cor == 'r')
+            {
+                if((*Tree)->Esquerda != NULL && (*Tree)->Esquerda->Cor == 'r')
+                {
+                    (*Tree)->Direita->Cor = 'b';
+                    (*Tree)->Esquerda->Cor = 'b';
+                    if(Pai != NULL)
+                        (*Tree)->Cor = 'r';
+                }
+            }
+        }
+        if((*Tree)->Direita->Esquerda != NULL)
+        {
+            if((*Tree)->Direita->Cor == 'r' && (*Tree)->Direita->Esquerda->Cor == 'r')
+            {
+                if((*Tree)->Esquerda != NULL && (*Tree)->Esquerda->Cor == 'r')
+                {
+                    (*Tree)->Direita->Cor = 'b';
+                    (*Tree)->Esquerda->Cor = 'b';
+                    if(Pai != NULL)
+                        (*Tree)->Cor = 'r';
+                }
+            }
         }
     }
 }
@@ -83,7 +132,7 @@ void insere(RBTree**Tree, RBTree *Pai, int info, char *rotacionou)
 
     if(*Tree == NULL)   //// ELEMENTO A SER INSERIDO SERA RAIZ
     {
-        *Tree = criaNo(*Tree, 'b', info);
+        *Tree = criaNo(*Tree, 'r', info);
         (*Tree)->Pai = Pai;
         *rotacionou = 0;
     }
@@ -125,9 +174,132 @@ void insere(RBTree**Tree, RBTree *Pai, int info, char *rotacionou)
         }
     }
     colore(&*Tree);
+}*/
+
+void rotacao_direita(RBTree **no)
+{
+	RBTree *q = (*no)->Esquerda;
+	q->Cor = 'b';
+	(*no)->Cor = 'r';
+	(*no)->Esquerda = q->Direita;
+	if((*no)->Esquerda != NULL)
+		(*no)->Esquerda->Pai = *no;
+	q->Direita = *no;
+	q->Pai = (*no)->Pai;
+	(*no)->Pai = q;
+	*no = q;
 }
 
-void rotacao_esquerda(RBTree**Tree)
+void rotacao_esquerda(RBTree **no)
+{
+	RBTree *q = (*no)->Direita;
+	q->Cor = 'b';
+	(*no)->Cor = 'r';
+	(*no)->Direita = q->Esquerda;
+	if((*no)->Direita != NULL)
+		(*no)->Direita->Pai = *no;
+	q->Esquerda = *no;
+	q->Pai = (*no)->Pai;
+	(*no)->Pai = q;
+	*no = q;
+}
+
+void insere(RBTree**raiz, RBTree *pai,int info)
+{
+	if(*raiz == NULL)
+	{
+		*raiz = criaNo(pai, 'r', info);
+
+		if(pai == NULL)
+			(*raiz)->Cor = 'b';
+	}
+	else
+	{
+		if(info > (*raiz)->Info)
+			insere(&(*raiz)->Direita,*raiz, info);
+		else
+			insere(&(*raiz)->Esquerda,*raiz, info);
+	}
+
+	if((*raiz)->Esquerda != NULL) /// filhoesq != null
+	{
+		if((*raiz)->Esquerda->Esquerda != NULL) /// filhoesq -> filhoesq != null
+		{
+			if((*raiz)->Esquerda->Cor == 'r' && (*raiz)->Esquerda->Esquerda->Cor == 'r')
+			{   /// pai e filho red
+				if((*raiz)->Direita != NULL && (*raiz)->Direita->Cor == 'r')
+				{
+				    /// pai, tio e filho red
+					(*raiz)->Direita->Cor = 'b';
+					(*raiz)->Esquerda->Cor = 'b';
+					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
+						(*raiz)->Cor = 'r';
+				}
+				else
+					rotacao_direita(&*raiz);
+			}
+		}
+
+		if((*raiz)->Esquerda->Direita != NULL) /// filhoesq -> filhodir != null
+		{
+			if((*raiz)->Esquerda->Cor == 'r' && (*raiz)->Esquerda->Direita->Cor == 'r')
+			{   /// pai e filho red
+				if((*raiz)->Direita != NULL && (*raiz)->Direita->Cor == 'r')
+				{   /// pai, tio e filho red
+					(*raiz)->Direita->Cor = 'b';
+					(*raiz)->Esquerda->Cor = 'b';
+					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
+						(*raiz)->Cor = 'r';
+				}
+				else
+				{
+					rotacao_esquerda(&(*raiz)->Esquerda);
+					rotacao_direita(&*raiz);
+				}
+			}
+		}
+	}
+
+	if((*raiz)->Direita != NULL) /// filhodir != null
+	{
+		if((*raiz)->Direita->Direita != NULL) /// filhodir -> filhodir != null
+		{
+			if((*raiz)->Direita->Cor == 'r' && (*raiz)->Direita->Direita->Cor == 'r')
+			{   /// pai e filho red
+				if((*raiz)->Esquerda != NULL && (*raiz)->Esquerda->Cor == 'r')
+				{   /// tio, pai e filho red
+					(*raiz)->Direita->Cor = 'b';
+                    (*raiz)->Esquerda->Cor = 'b';
+					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
+						(*raiz)->Cor = 'r';
+				}
+				else
+					rotacao_esquerda(&*raiz);
+			}
+		}
+
+		if((*raiz)->Direita->Esquerda != NULL) /// filhodir -> filhoesq != null
+		{
+			if((*raiz)->Direita->Cor == 'r' && (*raiz)->Direita->Esquerda->Cor == 'r')
+			{   /// pai e filho red
+				if((*raiz)->Esquerda != NULL && (*raiz)->Esquerda->Cor == 'r')
+				{ /// pai, tio e filho red
+					(*raiz)->Direita->Cor = 'b';
+					(*raiz)->Esquerda->Cor = 'b';
+					if((*raiz)->Pai != NULL) /// se não for a raiz da arvore
+						(*raiz)->Cor = 'r';
+				}
+				else
+				{
+					rotacao_direita(&(*raiz)->Direita);
+					rotacao_esquerda(&*raiz);
+				}
+			}
+		}
+	}
+}
+
+/*void rotacao_esquerda(RBTree**Tree)
 {
     RBTree *Q, *Temp;
     Q = (*Tree)->Direita;
@@ -145,7 +317,7 @@ void rotacao_direita(RBTree**Tree)
     Q->Direita = (*Tree);
     (*Tree)->Esquerda = Temp;
     *Tree = Q;
-}
+}*/
 
 void nivel(RBTree *Raiz, int *nv)
 {

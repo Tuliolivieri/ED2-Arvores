@@ -176,123 +176,125 @@ void insere(RBTree**Tree, RBTree *Pai, int info, char *rotacionou)
     colore(&*Tree);
 }*/
 
-void rotacao_direita(RBTree **no)
+void rotacao_direita(RBTree **Tree)
 {
-	RBTree *q = (*no)->Esquerda;
-	q->Cor = 'b';
-	(*no)->Cor = 'r';
-	(*no)->Esquerda = q->Direita;
-	if((*no)->Esquerda != NULL)
-		(*no)->Esquerda->Pai = *no;
-	q->Direita = *no;
-	q->Pai = (*no)->Pai;
-	(*no)->Pai = q;
-	*no = q;
+	RBTree *Q;
+	Q = (*Tree)->Esquerda;
+	Q->Cor = 'b';
+	(*Tree)->Cor = 'r';
+	(*Tree)->Esquerda = Q->Direita;
+	if((*Tree)->Esquerda != NULL)
+		(*Tree)->Esquerda->Pai = *Tree;
+	Q->Direita = *Tree;
+	Q->Pai = (*Tree)->Pai;
+	(*Tree)->Pai = Q;
+	*Tree = Q;
 }
 
-void rotacao_esquerda(RBTree **no)
+void rotacao_esquerda(RBTree **Tree)
 {
-	RBTree *q = (*no)->Direita;
-	q->Cor = 'b';
-	(*no)->Cor = 'r';
-	(*no)->Direita = q->Esquerda;
-	if((*no)->Direita != NULL)
-		(*no)->Direita->Pai = *no;
-	q->Esquerda = *no;
-	q->Pai = (*no)->Pai;
-	(*no)->Pai = q;
-	*no = q;
+	RBTree *Q;
+	Q = (*Tree)->Direita;
+	Q->Cor = 'b';
+	(*Tree)->Cor = 'r';
+	(*Tree)->Direita = Q->Esquerda;
+	if((*Tree)->Direita != NULL)
+		(*Tree)->Direita->Pai = *Tree;
+	Q->Esquerda = *Tree;
+	Q->Pai = (*Tree)->Pai;
+	(*Tree)->Pai = Q;
+	*Tree = Q;
 }
 
-void insere(RBTree**raiz, RBTree *pai,int info)
+void insere(RBTree**Tree, RBTree *Pai,int info)
 {
-	if(*raiz == NULL)
+	if(*Tree == NULL)
 	{
-		*raiz = criaNo(pai, 'r', info);
+		*Tree = criaNo(Pai, 'r', info);
 
-		if(pai == NULL)
-			(*raiz)->Cor = 'b';
+		if(Pai == NULL)
+			(*Tree)->Cor = 'b';
 	}
 	else
 	{
-		if(info > (*raiz)->Info)
-			insere(&(*raiz)->Direita,*raiz, info);
+		if(info > (*Tree)->Info)
+			insere(&(*Tree)->Direita,*Tree, info);
 		else
-			insere(&(*raiz)->Esquerda,*raiz, info);
+			insere(&(*Tree)->Esquerda,*Tree, info);
 	}
 
-	if((*raiz)->Esquerda != NULL) /// filhoesq != null
+	if((*Tree)->Esquerda != NULL) /// filhoesq != null
 	{
-		if((*raiz)->Esquerda->Esquerda != NULL) /// filhoesq -> filhoesq != null
+		if((*Tree)->Esquerda->Esquerda != NULL) /// filhoesq -> filhoesq != null
 		{
-			if((*raiz)->Esquerda->Cor == 'r' && (*raiz)->Esquerda->Esquerda->Cor == 'r')
-			{   /// pai e filho red
-				if((*raiz)->Direita != NULL && (*raiz)->Direita->Cor == 'r')
+			if((*Tree)->Esquerda->Cor == 'r' && (*Tree)->Esquerda->Esquerda->Cor == 'r')
+			{   /// Pai e filho red
+				if((*Tree)->Direita != NULL && (*Tree)->Direita->Cor == 'r')
 				{
-				    /// pai, tio e filho red
-					(*raiz)->Direita->Cor = 'b';
-					(*raiz)->Esquerda->Cor = 'b';
-					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
-						(*raiz)->Cor = 'r';
+				    /// Pai, tio e filho red
+					(*Tree)->Direita->Cor = 'b';
+					(*Tree)->Esquerda->Cor = 'b';
+					if((*Tree)->Pai != NULL) /// se nao for a Tree da arvore
+						(*Tree)->Cor = 'r';
 				}
 				else
-					rotacao_direita(&*raiz);
+					rotacao_direita(&*Tree);
 			}
 		}
 
-		if((*raiz)->Esquerda->Direita != NULL) /// filhoesq -> filhodir != null
+		if((*Tree)->Esquerda->Direita != NULL) /// filhoesq -> filhodir != null
 		{
-			if((*raiz)->Esquerda->Cor == 'r' && (*raiz)->Esquerda->Direita->Cor == 'r')
-			{   /// pai e filho red
-				if((*raiz)->Direita != NULL && (*raiz)->Direita->Cor == 'r')
-				{   /// pai, tio e filho red
-					(*raiz)->Direita->Cor = 'b';
-					(*raiz)->Esquerda->Cor = 'b';
-					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
-						(*raiz)->Cor = 'r';
+			if((*Tree)->Esquerda->Cor == 'r' && (*Tree)->Esquerda->Direita->Cor == 'r')
+			{   /// Pai e filho red
+				if((*Tree)->Direita != NULL && (*Tree)->Direita->Cor == 'r')
+				{   /// Pai, tio e filho red
+					(*Tree)->Direita->Cor = 'b';
+					(*Tree)->Esquerda->Cor = 'b';
+					if((*Tree)->Pai != NULL) /// se nao for a Tree da arvore
+						(*Tree)->Cor = 'r';
 				}
 				else
 				{
-					rotacao_esquerda(&(*raiz)->Esquerda);
-					rotacao_direita(&*raiz);
+					rotacao_esquerda(&(*Tree)->Esquerda);
+					rotacao_direita(&*Tree);
 				}
 			}
 		}
 	}
 
-	if((*raiz)->Direita != NULL) /// filhodir != null
+	if((*Tree)->Direita != NULL) /// filhodir != null
 	{
-		if((*raiz)->Direita->Direita != NULL) /// filhodir -> filhodir != null
+		if((*Tree)->Direita->Direita != NULL) /// filhodir -> filhodir != null
 		{
-			if((*raiz)->Direita->Cor == 'r' && (*raiz)->Direita->Direita->Cor == 'r')
-			{   /// pai e filho red
-				if((*raiz)->Esquerda != NULL && (*raiz)->Esquerda->Cor == 'r')
-				{   /// tio, pai e filho red
-					(*raiz)->Direita->Cor = 'b';
-                    (*raiz)->Esquerda->Cor = 'b';
-					if((*raiz)->Pai != NULL) /// se nao for a raiz da arvore
-						(*raiz)->Cor = 'r';
+			if((*Tree)->Direita->Cor == 'r' && (*Tree)->Direita->Direita->Cor == 'r')
+			{   /// Pai e filho red
+				if((*Tree)->Esquerda != NULL && (*Tree)->Esquerda->Cor == 'r')
+				{   /// tio, Pai e filho red
+					(*Tree)->Direita->Cor = 'b';
+                    (*Tree)->Esquerda->Cor = 'b';
+					if((*Tree)->Pai != NULL) /// se nao for a Tree da arvore
+						(*Tree)->Cor = 'r';
 				}
 				else
-					rotacao_esquerda(&*raiz);
+					rotacao_esquerda(&*Tree);
 			}
 		}
 
-		if((*raiz)->Direita->Esquerda != NULL) /// filhodir -> filhoesq != null
+		if((*Tree)->Direita->Esquerda != NULL) /// filhodir -> filhoesq != null
 		{
-			if((*raiz)->Direita->Cor == 'r' && (*raiz)->Direita->Esquerda->Cor == 'r')
-			{   /// pai e filho red
-				if((*raiz)->Esquerda != NULL && (*raiz)->Esquerda->Cor == 'r')
-				{ /// pai, tio e filho red
-					(*raiz)->Direita->Cor = 'b';
-					(*raiz)->Esquerda->Cor = 'b';
-					if((*raiz)->Pai != NULL) /// se não for a raiz da arvore
-						(*raiz)->Cor = 'r';
+			if((*Tree)->Direita->Cor == 'r' && (*Tree)->Direita->Esquerda->Cor == 'r')
+			{   /// Pai e filho red
+				if((*Tree)->Esquerda != NULL && (*Tree)->Esquerda->Cor == 'r')
+				{ /// Pai, tio e filho red
+					(*Tree)->Direita->Cor = 'b';
+					(*Tree)->Esquerda->Cor = 'b';
+					if((*Tree)->Pai != NULL) /// se não for a Tree da arvore
+						(*Tree)->Cor = 'r';
 				}
 				else
 				{
-					rotacao_direita(&(*raiz)->Direita);
-					rotacao_esquerda(&*raiz);
+					rotacao_direita(&(*Tree)->Direita);
+					rotacao_esquerda(&*Tree);
 				}
 			}
 		}

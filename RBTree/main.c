@@ -12,7 +12,16 @@ int main()
     while(op != 27)
     {
         clrscr();
-        gotoxy(10, 2); printf("Menu");
+        exibe(Tree, 35, 2, 17);
+        gotoxy(2, 22); printf("Elemento a ser inserido:\t");
+        fflush(stdin);
+        scanf("%d", &elem);
+        insere(&Tree, Tree, elem);
+        clrscr();
+        exibe(Tree, 35, 2, 17);
+        gotoxy(2, 22); printf("ESC para sair ou outro tecla para continuar...");
+        op = getch();
+        /*gotoxy(10, 2); printf("Menu");
         gotoxy(5, 5); printf("[I] - Inserir");
         gotoxy(5, 7); printf("[E] - Exibir");
         gotoxy(5, 9); printf("[ESC] - Sair");
@@ -39,7 +48,7 @@ int main()
                 exibe(Tree, 35, 2, 17);
                 getch();
                 break;
-        }
+        }*/
     }
 
     return 0;
